@@ -1,32 +1,51 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Title = styled.h1`
   font-size: 30px;
   color: #3f3f3f;
   margin-top: 40px;
+  line-height: 40px;
+  max-width: 300px;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   display: flex;
+
   margin-top: 30px;
+  max-width: 700px;
 
   input {
-    width: 350px;
+    flex: 1;
     padding: 16px 20px;
     border: 0;
+    border-radius: 5px 0 0 5px;
+    color: #3f3f3f;
+
+    &::placeholder {
+      color: #a8a8b3;
+    }
   }
 
   button {
     width: 140px;
 
     background: #00ba00;
-    border: 1px solid #00aa00;
     color: white;
+    border: 1px solid #00aa00;
+    border-radius: 0 5px 5px 0;
+    font-weight: bold;
+    transition: background 0.2s;
+
+    &:hover {
+      background: ${shade(0.2, '#00aa00')};
+    }
   }
 `;
 
 export const Repositories = styled.div`
   margin-top: 50px;
+  max-width: 700px;
 
   a {
     display: flex;
@@ -37,12 +56,19 @@ export const Repositories = styled.div`
     padding: 20px;
     text-decoration: none;
     position: relative;
-    margin-bottom: 15px;
-    transition: left 1s;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateX(10px);
+    }
+
+    & + a {
+      margin-top: 15px;
+    }
 
     img {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
     }
 
@@ -61,19 +87,9 @@ export const Repositories = styled.div`
       }
     }
 
-    &::after {
-      content: '>';
-
-      font-size: 20px;
-      font-weight: bold;
-      color: #ddd;
-      right: 20px;
-      position: absolute;
-    }
-
-    &:hover {
-      position: relative;
-      left: 10px;
+    svg {
+      color: #ccd;
+      margin-left: auto;
     }
   }
 `;
