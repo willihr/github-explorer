@@ -42,6 +42,7 @@ export const Form = styled.form<FormProps>`
   button {
     width: 140px;
 
+    padding: 10px 30px;
     background: #00ba00;
     color: white;
     border: 1px solid #00aa00;
@@ -51,6 +52,17 @@ export const Form = styled.form<FormProps>`
 
     &:hover {
       background: ${shade(0.2, '#00aa00')};
+    }
+  }
+
+  @media (max-width: 600px) {
+    & {
+      flex-direction: column;
+
+      button {
+        border-radius: 5px;
+        margin-top: 10px;
+      }
     }
   }
 `;

@@ -14,6 +14,7 @@ interface Repository {
   full_name: string;
   description: string;
   owner: {
+    login: string;
     avatar_url: string;
   };
   stargazers_count: number;
@@ -21,16 +22,30 @@ interface Repository {
   open_issues_count: number;
 }
 
+interface Issue {
+  id: string;
+  title: string;
+  html_url: string;
+  user: {
+    login: string;
+  };
+}
+
 const Repository: React.FC = () => {
   const { params } = useRouteMatch<RepositoriesParams>();
 
-  const [repository, setRepository] = useState<Repository>({} as Repository);
+  const [repository, setRepository] = useState<Repository | null>(null);
+  const [issues, setIssues] = useState<Issue[]>([]);
 
   useEffect(() => {
     api.get<Repository>(`/repos/${params.repository}`).then(response => {
       setRepository(response.data);
     });
-  }, []);
+
+    api.get<Issue[]>(`/repos/${params.repository}/issues`).then(response => {
+      setIssues(response.data);
+    });
+  }, [params.repository]);
 
   return (
     <>
@@ -42,45 +57,50 @@ const Repository: React.FC = () => {
         </Link>
       </Header>
 
-      <RepositoryInfo>
-        <header>
-          <img src="asdas" alt="" />
-          <div>
-            <strong>willihr/testproject</strong>
-            <p>Descrição do Repositório</p>
-          </div>
-        </header>
-        <ul>
-          <li>
-            <strong>1808</strong>
-            <span>Stars</span>
-          </li>
-          <li>
-            <strong>48</strong>
-            <span>Forks</span>
-          </li>
-          <li>
-            <strong>67</strong>
-            <span>Issues abertas</span>
-          </li>
-        </ul>
-      </RepositoryInfo>
+      {repository && (
+        <RepositoryInfo>
+          <header>
+            <img
+              src={repository.owner.avatar_url}
+              alt={repository.owner.login}
+            />
+            <div>
+              <strong>{repository.full_name}</strong>
+              <p>{repository.description}</p>
+            </div>
+          </header>
+          <ul>
+            <li>
+              <strong>{repository.stargazers_count}</strong>
+              <span>Stars</span>
+            </li>
+            <li>
+              <strong>{repository.forks_count}</strong>
+              <span>Forks</span>
+            </li>
+            <li>
+              <strong>{repository.open_issues_count}</strong>
+              <span>Issues abertas</span>
+            </li>
+          </ul>
+        </RepositoryInfo>
+      )}
 
       <Issues>
-        <Link to="/">
-          <div>
-            <strong>gostack-desafio-conceitos-react-native</strong>
-            <span>Diego Fernandes</span>
-          </div>
-          <FiChevronRight size={20} />
-        </Link>
-        <Link to="/">
-          <div>
-            <strong>gostack-desafio-conceitos-react-native</strong>
-            <span>Diego Fernandes</span>
-          </div>
-          <FiChevronRight size={20} />
-        </Link>
+        {issues.map(issue => (
+          <a
+            key={issue.id}
+            href={issue.html_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div>
+              <strong>{issue.title}</strong>
+              <span>{issue.user.login}</span>
+            </div>
+            <FiChevronRight size={20} />
+          </a>
+        ))}
       </Issues>
     </>
   );
